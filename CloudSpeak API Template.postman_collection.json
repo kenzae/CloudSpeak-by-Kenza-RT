@@ -1,0 +1,243 @@
+{
+	"info": {
+		"_postman_id": "dbf4e79e-37ae-4950-b593-334e80ee38dd",
+		"name": "CloudSpeak API Template",
+		"description": "Template complet pour l'API CloudSpeak avec authentification, gestion des messages et utilisateurs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45235797",
+		"_collection_link": "https://www.postman.com/kenzamhammedi/my-workspace/collection/hsx5lmi/cloudspeak-api-template?action=share&source=collection_link&creator=45235797"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register (POST /tempest)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"storm_rider\",\n  \"email\": \"user@cloud.com\",\n  \"password\": \"Cumulonimbus123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/tempest?lightning_type=instant",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tempest"
+							],
+							"query": [
+								{
+									"key": "lightning_type",
+									"value": "instant"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "201 - SkywalkerBorn",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"storm_rider\",\n  \"email\": \"user@cloud.com\",\n  \"password\": \"Cumulonimbus123!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tempest?lightning_type=instant",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tempest"
+									],
+									"query": [
+										{
+											"key": "lightning_type",
+											"value": "instant"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"status\": \"SkywalkerBorn\",\n  \"user_id\": \"usr-9b2s-x7y9\",\n  \"initial_cloud_id\": \"cl0ud-xyz123\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login (POST /lightning)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@cloud.com\",\n  \"password\": \"Cumulonimbus123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/lightning",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lightning"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Send Whisper (POST /clouds)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"whisper\": \"My secret message\",\n  \"skywalker\": \"storm_rider\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clouds",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clouds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Message (DELETE /storm/:id)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "X-Cloud-Force",
+								"value": "true"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/storm/cl0ud-xyz123",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"storm",
+								"cl0ud-xyz123"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"exec": [
+					"console.log('CloudSpeak API Request Started');"
+				],
+				"type": "text/javascript"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"exec": [
+					"pm.test(\"Status code is success\", function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+					"});",
+					"",
+					"// Sauvegarde automatique du token JWT",
+					"if (pm.response.code === 201 && pm.response.json().token) {",
+					"    pm.collectionVariables.set('token', pm.response.json().token);",
+					"}"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://api.cloudspeak.com/v2"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
